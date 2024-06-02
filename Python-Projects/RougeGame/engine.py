@@ -27,7 +27,7 @@ class Engine:
                 raise SystemExit
             
     def render(self, console: Console, context:Context) -> None:
-        for entity in self.entites:
+        for entity in self.entities:
             console.print(entity.x,entity.y,entity.char,fg=entity.color)
 
         context.present(console)
