@@ -1,24 +1,27 @@
-import tcod 
+import tcod
 
 def main() -> None:
-    screen_width = 80 
+    screen_width = 80
     screen_height = 80
 
-    tileset = tcod.tileset.load_tilesheet(
-        "dejavu10x10_gs_tc.png", 32, 8, tcod.tileset.CHARMAP_TCOD
-    )
+    try:
+        tileset = tcod.tileset.load_tilesheet(
+            "Python-Projects/RougeGame/dejavu10x10_gs_tc.png", 32, 8, tcod.tileset.CHARMAP_TCOD
+        )
+    except FileNotFoundError:
+        print("Tileset image not found. Please check the path.")
+        return
 
     with tcod.context.new_terminal(
         screen_width,
         screen_height,
         tileset=tileset,
-        title="First Rouge Like Game",
+        title="First Rogue-like Game",
         vsync=True,
     ) as context:
-        root_console = tcod.console(screen_width,screen_height,order="F")
+        root_console = tcod.console.Console(screen_width, screen_height, order="F")
         while True:
-            root_console.print(x=1,y=1,string="@")
-
+            root_console.print(x=1, y=1, string="@")
             context.present(root_console)
 
             for event in tcod.event.wait():
