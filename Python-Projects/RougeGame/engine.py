@@ -9,7 +9,7 @@ from input_handler import EventHandler
 
 class Engine:
     def __init__(self, entities:Set[Entity], event_handler: EventHandler, player:Entity):
-        self.entity = entities
+        self.entities = entities
         self.event_handler = event_handler
         self.player = player
 
