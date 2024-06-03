@@ -7,7 +7,7 @@ graphic_dt = np.dtype(
     [
         ("ch",np.int32), #unicode codepoint.
         ("fg","3B"), #3 unsigned bytes for rgb
-        ("bg","3b"),
+        ("bg","3B"),
     ]
 )
 

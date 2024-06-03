@@ -4,11 +4,14 @@ from engine import Engine
 from input_handler import EventHandler
 from entity import Entity
 
+import imageio as iio
+
 def main() -> None:
     screen_width = 80
     screen_height = 80
 
-   
+   miner_img = iio.read("miner.png")
+
 
     try:
         tileset = tcod.tileset.load_tilesheet(
