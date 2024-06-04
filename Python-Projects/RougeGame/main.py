@@ -10,7 +10,9 @@ def main() -> None:
     screen_width = 80
     screen_height = 80
 
-   miner_img = iio.read("miner.png")
+    # miner_img = iio.read("Python-Projects/RougeGame/miner.png")
+
+    # miner = iio.imwrite("Python-Projects/RougeGame/miner.png",miner_img)
 
 
     try:
@@ -23,7 +25,7 @@ def main() -> None:
     
     event_handler = EventHandler()
 
-    player = Entity(int(screen_width/2),int(screen_height/2),"$",(255,255,255))
+    player = Entity(int(screen_width/2),int(screen_height/2),"@",(255,255,255))
     npc = Entity(int(screen_width/2-5),int(screen_height/2),"O",(255,255,0))
     entities = {npc,player}
 
