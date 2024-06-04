@@ -1,6 +1,9 @@
 from PIL import Image
 import tcod
 import tcod.constants
+import tempfile
+import os
+from tcod import libtcodpy
 
 def load_sprite_sheet(image_path: str, frame_width:int,frame_height:int):
     """
@@ -19,9 +22,13 @@ def load_sprite_sheet(image_path: str, frame_width:int,frame_height:int):
     return frames
 
 def pil_image_to_tcod(image):
-    image = image.convert("RGBA")
-    data = image.tobytes("raw","RGBA")
-    tcod_image = tcod.image.Image.from_bytes(data,image.size[0],image.size[1],tcod.constants.ORDER_RGBA)
+    # Save the PIL image to a temporary file
+    temp_file = tempfile.NamedTemporaryFile(delete=False, suffix=".png")
+    image.save(temp_file.name)
+    # Load the temporary file with tcod
+    tcod_image = tcod.image.Image.from_file(temp_file.name)
+    # Cleanup the temporary file
+    os.remove(temp_file.name)
     return tcod_image
 
 def load_and_convert_frames(image_path: str, frame_width: int, frame_height: int):
