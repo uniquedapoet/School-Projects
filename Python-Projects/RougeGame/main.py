@@ -4,16 +4,16 @@ from engine import Engine
 from input_handler import EventHandler
 from entity import Entity
 
-import imageio as iio
+from tcod import libtcodpy
+from sprite_loader import load_and_convert_frames
 
 def main() -> None:
     screen_width = 80
     screen_height = 80
 
-    # miner_img = iio.read("Python-Projects/RougeGame/miner.png")
-
-    # miner = iio.imwrite("Python-Projects/RougeGame/miner.png",miner_img)
-
+    image_path = "Python-Projects/RougeGame/miner.png"
+    frame_width, frame_height = 32, 32
+    frames = load_and_convert_frames(image_path, frame_width, frame_height)
 
     try:
         tileset = tcod.tileset.load_tilesheet(
@@ -25,7 +25,7 @@ def main() -> None:
     
     event_handler = EventHandler()
 
-    player = Entity(int(screen_width/2),int(screen_height/2),"@",(255,255,255))
+    player = Entity(int(screen_width / 2), int(screen_height / 2), image=player_image)    
     npc = Entity(int(screen_width/2-5),int(screen_height/2),"O",(255,255,0))
     entities = {npc,player}
 
