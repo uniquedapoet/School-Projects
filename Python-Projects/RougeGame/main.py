@@ -22,7 +22,7 @@ def main() -> None:
 
     event_handler = EventHandler()
 
-    player = Entity(int(screen_width / 2), int(screen_height / 2), frames=frames,char="$")  # Initialize player with frames
+    player = Entity(int(screen_width / 2), int(screen_height / 2), char="$",color=(255,255,0))  # Initialize player with frames
     npc = Entity(int(screen_width / 2 - 5), int(screen_height / 2), char='O', color=(255, 255, 0))
     entities = {npc, player}
 
