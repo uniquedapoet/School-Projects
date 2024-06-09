@@ -4,6 +4,8 @@ Making Functions for extracting and manipulating data
 import pandas as pd
 import matplotlib.pyplot as plt
 
+
+
 def plot_bar_graph(df, title, x_label, y_label):
     plt.figure(figsize=(10, 6))
     df.plot(kind='bar', stacked=True)
