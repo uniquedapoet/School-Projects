@@ -6,7 +6,7 @@ from tcod.console import Console
 from Entity import Entity
 from input_handler import EventHandler
 from game_map import GameMap
-
+   
 class Engine:
     def __init__(
         self, entites: Set[Entity], event_handler: EventHandler, player: Entity, game_map: GameMap
