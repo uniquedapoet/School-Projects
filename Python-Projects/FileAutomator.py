@@ -4,12 +4,15 @@ import shutil
 import logging
 import hashlib
 
-current_path = "/Users/eduardobenjamin/Desktop/Images"
+current_path = "/Users/eduardobenjamin/Desktop/"
 to_sort_path = "/Users/eduardobenjamin/Desktop/To-Sort"
 screenshots_path = "/Users/eduardobenjamin/Desktop/ScreenShots"
 images_path = "/Users/eduardobenjamin/Desktop/Images"
 pdfs_path = "/Users/eduardobenjamin/Desktop/PDFs"
 python_path = "/Users/eduardobenjamin/Desktop/Python-Files"
+data_folder = "/Users/eduardobenjamin/Desktop/Data"
+docs_folder = "/Users/eduardobenjamin/Desktop/Documents"
+
 
 def process(file_path):
     logging.info(f"Processing file: {file_path}")
@@ -25,10 +28,15 @@ def process(file_path):
         destination = pdfs_path
     elif ext in ['.py', '.ipynb']:
         destination = python_path
+    elif ext in ['.csv', '.json']:
+        destination = data_folder
+    elif ext in ['.docx', '.doc']:
+        destination = docs_folder
     else:
         destination = to_sort_path
 
     move_file(file_path, destination)
+
 
 def calculate_hash(file_path):
     hash_algo = hashlib.md5()
@@ -37,24 +45,25 @@ def calculate_hash(file_path):
             hash_algo.update(chunk)
     return hash_algo.hexdigest()
 
+
 def move_file(src, dest):
     logging.info(f"Moving file from {src} to {dest}")
     if not os.path.exists(dest):
         os.makedirs(dest)
-    
+
     # Check read permission for source file
     if not os.access(src, os.R_OK):
         logging.error(f"No read permission for {src}")
         return
-    
+
     # Check write permission for destination directory
     if not os.access(dest, os.W_OK):
         logging.error(f"No write permission for {dest}")
         return
-    
+
     src_hash = calculate_hash(src)
     dest_path = os.path.join(dest, os.path.basename(src))
-    
+
     for file_name in os.listdir(dest):
         existing_file_path = os.path.join(dest, file_name)
         if os.path.isfile(existing_file_path):
@@ -63,7 +72,7 @@ def move_file(src, dest):
                 logging.info(f"Duplicate file found. Deleting {src}")
                 os.remove(src)
                 return
-    
+
     if os.path.exists(dest_path):
         base, ext = os.path.splitext(dest_path)
         counter = 1
@@ -75,6 +84,7 @@ def move_file(src, dest):
 
     shutil.move(src, dest_path)
     logging.info(f"Moved {src} to {dest_path}")
+
 
 if __name__ == "__main__":
     logging.basicConfig(level=logging.DEBUG,
