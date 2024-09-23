@@ -1,2 +1,7 @@
 SPOTIFY_CLIENT_ID = '8ff4939a9ed140ed9d0fa6b55b44169b'
 SPOTIFY_SECRET = '6ae7ff9f5ac14c08bf9fe8ec6a0f25d2'
+# GENIUS URL https://genius.com/api-clients
+GENIUS_CLIENT_ID = 'HBEdvu8RZHXDifNxoZSXBdXSapPiYoEFigthUL3Vo0Ork1pG0PD5hxo-umZXJYcx'
+GENIUS_SECRET = 'gbc3Zp4P13XThN_LirZwB4codP5jGtl5Rc8Yaxh5_eQF0ybh6sP-LNymgzmErL6Ys_R_IspR6roqd4DIiopneQ'
+
+
