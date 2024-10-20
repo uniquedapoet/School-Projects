@@ -160,3 +160,6 @@ cython_debug/
 #.idea/
 RougeGame
 scratch.ipynb
+INFO_4602/Red_Light_Camera_Locations_20241004.csv
+INFO_4602/Traffic_Crashes_-_Crashes_20241004.csv
+INFO_4602/TrafficProject.ipynb
