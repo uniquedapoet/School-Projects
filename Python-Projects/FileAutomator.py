@@ -20,7 +20,7 @@ def process(file_path):
     _, ext = os.path.splitext(file_path)
     ext = ext.lower()
     print(file_name)
-    if 'Screen Shot' in file_name:
+    if 'ScreenShot' in file_name:
         destination = screenshots_path
     elif ext in ['.png', '.jpg', '.jpeg', '.gif']:
         destination = images_path
