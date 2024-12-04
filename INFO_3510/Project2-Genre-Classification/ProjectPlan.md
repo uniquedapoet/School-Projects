@@ -1,155 +1,173 @@
-Building a **genre classification project** in Python while incorporating SQLite for data management and Discord for user interaction could look like this:
+### **Step 1: Obtain Data**
+#### 1.1. Download Data from Kaggle
+- **Dataset:** Search Kaggle for datasets with relevant audio features, such as Spotify tracks or audio analysis datasets (e.g., tracks with `energy`, `danceability`, `valence`, etc.).
+- **Clean the Dataset:** Ensure the dataset includes the columns needed, like `title`, `artist`, `genre`, and numerical audio features. Remove irrelevant data or duplicates.
 
----
-
-### 1. **Overview**
-- **Genre Classification**: Use machine learning to classify songs into genres based on audio features.
-- **SQLite**: Store song metadata, audio features, and classification results.
-- **Discord**: Build a bot to interact with users, allowing them to submit songs or query genre predictions.
-
----
-
-### 2. **Steps to Build the Project**
-
-#### **Step 1: Gather Data**
-- Use datasets like the **GTZAN Genre Dataset** or Spotify’s Web API.
-- Extract features like tempo, energy, loudness, MFCCs (Mel Frequency Cepstral Coefficients), etc., using Python libraries like `librosa`.
-
-#### **Step 2: Build the Genre Classifier**
-- Use machine learning libraries like `scikit-learn` or deep learning frameworks like `TensorFlow` or `PyTorch`.
-- Steps:
-  1. Preprocess the data: Extract features from audio files.
-  2. Train a classifier: Use models like Random Forest, SVM, or CNNs (for deep learning).
-  3. Evaluate performance: Use metrics like accuracy, precision, and recall.
-
-#### **Step 3: Incorporate SQLite**
-- **Set up the database**:
-  - Create an SQLite database to store:
-    - Song metadata (title, artist, duration, etc.).
-    - Audio features extracted during preprocessing.
-    - Genre classification results.
-  - Example schema:
-    ```sql
-    CREATE TABLE Songs (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        title TEXT,
-        artist TEXT,
-        duration REAL,
-        genre TEXT,
-        features BLOB
-    );
+#### 1.2. Scrape Lyrics from Genius
+- **Use the Genius API**:
+  - Sign up for a Genius Developer account and generate an API token.
+  - Install the `lyricsgenius` library:
+    ```bash
+    pip install lyricsgenius
     ```
-- **Save and retrieve data**:
-  - Use `sqlite3` in Python to interact with the database.
-  - Store features as serialized objects (e.g., using `pickle`).
+  - Use the API to retrieve lyrics based on song titles and artists from your dataset.
 
-#### **Step 4: Integrate Discord**
-- Create a **Discord bot** using the `discord.py` library.
-- Features for the bot:
-  1. **Upload a song**: Allow users to upload songs, extract features, classify genre, and save results to SQLite.
-  2. **Query classification results**: Let users search the database by song title or artist.
-  3. **Interactive predictions**: Return genre predictions directly to the Discord channel.
+  **Example Code**:
+  ```python
+  import lyricsgenius
 
-#### **Step 5: Tie It All Together**
-- Workflow:
-  1. User uploads a song via Discord.
-  2. Bot extracts features using `librosa`.
-  3. Features are passed to the trained model for genre prediction.
-  4. Results are stored in SQLite.
-  5. Users can query results via Discord commands.
+  genius = lyricsgenius.Genius("YOUR_GENIUS_API_TOKEN")
+
+  # Example to fetch lyrics
+  song = genius.search_song("Song Title", "Artist")
+  print(song.lyrics)
+  ```
+
+- **Add Lyrics to Dataset**:
+  - Append the retrieved lyrics as a new column in your dataset.
+  - Handle missing lyrics appropriately (e.g., skip or add a placeholder like `"No lyrics found"`).
 
 ---
 
-### 3. **Sample Code**
+### **Step 2: Train Model on Genre Prediction**
+#### 2.1. Preprocess Data
+- **Feature Engineering**:
+  - Combine audio features (`energy`, `dance`, etc.) with text data (lyrics).
+  - Use `TF-IDF` or word embeddings (like `Word2Vec` or `BERT`) to represent lyrics numerically.
+  - Normalize numerical audio features.
 
-#### **SQLite Setup**
+- **Split Data**:
+  - Split the data into training and testing sets (e.g., 80% training, 20% testing).
+
+#### 2.2. Train the Model
+- **Choose a Model**:
+  - For genre prediction, use models that handle mixed data types:
+    - Text: Use models like `LSTM`, `BERT`, or `TF-IDF` combined with `LogisticRegression`.
+    - Numerical Features: Use models like `RandomForestClassifier`, `XGBoost`, or a neural network.
+  - Combine text and audio features into a single model using a pipeline or concatenate features.
+
+- **Train the Model**:
+  - Train the model on combined audio and lyrics features.
+  - Evaluate the model using metrics like accuracy, precision, recall, and F1-score.
+
+  **Example Workflow**:
+  ```python
+  from sklearn.pipeline import make_pipeline
+  from sklearn.ensemble import RandomForestClassifier
+  from sklearn.feature_extraction.text import TfidfVectorizer
+  from sklearn.model_selection import train_test_split
+
+  # Split data
+  X = df[['energy', 'dance', 'lyrics']]  # Features
+  y = df['genre']  # Target
+  X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+  # Text vectorizer and model
+  pipeline = make_pipeline(TfidfVectorizer(), RandomForestClassifier())
+  pipeline.fit(X_train['lyrics'], y_train)
+  ```
+
+---
+
+### **Step 3: Load Songs and Genres into Database**
+#### 3.1. Design the Database Schema
+Create a SQLite database schema with the following tables:
+- **`songs`**:
+  - `id` (Primary Key)
+  - `title` (Text)
+  - `artist` (Text)
+  - `lyrics` (Text)
+  - `energy`, `dance`, `valence` (Float)
+  - `genre` (Text)
+
+- **`predictions`**:
+  - `song_id` (Foreign Key)
+  - `predicted_genre` (Text)
+  - `confidence` (Float)
+
+#### 3.2. Insert Data into SQLite
+- Use `pandas.to_sql()` to load your DataFrame into the database.
+- Insert predicted genres into the `predictions` table.
+
+**Example**:
 ```python
 import sqlite3
 
-# Create database
-conn = sqlite3.connect('music.db')
-cursor = conn.cursor()
+# Connect to database
+con = sqlite3.connect('spotify.db')
 
-# Create table
-cursor.execute('''
-CREATE TABLE IF NOT EXISTS Songs (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    title TEXT,
-    artist TEXT,
-    duration REAL,
-    genre TEXT,
-    features BLOB
-)
-''')
-conn.commit()
-```
-
-#### **Discord Bot Integration**
-```python
-import discord
-from discord.ext import commands
-
-bot = commands.Bot(command_prefix='!')
-
-@bot.event
-async def on_ready():
-    print(f'Logged in as {bot.user}')
-
-@bot.command()
-async def classify(ctx, song_path: str):
-    # Extract features
-    features = extract_features(song_path)  # Define this function
-    # Predict genre
-    genre = predict_genre(features)  # Define this function
-    # Store in SQLite
-    save_to_db(song_path, genre, features)  # Define this function
-    await ctx.send(f"The genre for {song_path} is predicted to be {genre}!")
-
-@bot.command()
-async def search(ctx, title: str):
-    # Query SQLite
-    results = search_db(title)  # Define this function
-    if results:
-        await ctx.send(f"Results: {results}")
-    else:
-        await ctx.send("No results found!")
-
-bot.run('YOUR_DISCORD_BOT_TOKEN')
-```
-
-#### **Feature Extraction and Prediction**
-```python
-import librosa
-import numpy as np
-from sklearn.externals import joblib
-
-# Extract features
-def extract_features(filepath):
-    y, sr = librosa.load(filepath)
-    mfcc = librosa.feature.mfcc(y=y, sr=sr, n_mfcc=13)
-    return np.mean(mfcc.T, axis=0)
-
-# Predict genre
-def predict_genre(features):
-    model = joblib.load('genre_classifier.pkl')  # Load pre-trained model
-    return model.predict([features])[0]
-
-# Save to SQLite
-def save_to_db(title, genre, features):
-    conn = sqlite3.connect('music.db')
-    cursor = conn.cursor()
-    cursor.execute('''
-        INSERT INTO Songs (title, genre, features)
-        VALUES (?, ?, ?)
-    ''', (title, genre, features.tobytes()))
-    conn.commit()
+# Insert data into songs table
+df.to_sql('songs', con, if_exists='replace', index=False)
 ```
 
 ---
 
-### 4. **Extensions**
-- Add user-based recommendations using collaborative filtering.
-- Create a web dashboard using Flask or FastAPI for users to interact with the data.
-- Enhance the bot with commands for data visualization (e.g., genre distribution pie charts).
+### **Step 4: Create User Interactions Through Discord**
+#### 4.1. Set Up a Discord Bot
+- **Install the Discord API Library**:
+  ```bash
+  pip install discord.py
+  ```
 
-This project combines machine learning, database management, and bot development into a practical and fun application.
+- **Create a Discord Bot**:
+  - Register a bot on the Discord Developer Portal.
+  - Get your bot's token.
+
+- **Basic Bot Setup**:
+  ```python
+  import discord
+  from discord.ext import commands
+
+  bot = commands.Bot(command_prefix='!')
+
+  @bot.event
+  async def on_ready():
+      print(f'Bot is ready as {bot.user}')
+
+  bot.run('YOUR_DISCORD_BOT_TOKEN')
+  ```
+
+#### 4.2. Add Commands to Interact with the Database
+- **Fetch Song Info**:
+  Allow users to query the database to get a song's genre:
+  ```python
+  @bot.command()
+  async def get_genre(ctx, title):
+      # Connect to SQLite and fetch data
+      con = sqlite3.connect('spotify.db')
+      cursor = con.cursor()
+      cursor.execute("SELECT genre FROM songs WHERE title = ?", (title,))
+      result = cursor.fetchone()
+      if result:
+          await ctx.send(f"The genre for {title} is {result[0]}.")
+      else:
+          await ctx.send("Song not found.")
+  ```
+
+- **Run New Songs Through the Model**:
+  Add a command to predict the genre of a user-provided song:
+  ```python
+  @bot.command()
+  async def predict_genre(ctx, title, lyrics, energy, dance):
+      # Preprocess and predict
+      features = [[energy, dance, lyrics]]
+      predicted_genre = model.predict(features)
+      await ctx.send(f"The predicted genre is {predicted_genre[0]}.")
+  ```
+
+- **Save New Songs to Database**:
+  Append newly predicted songs to the SQLite database.
+
+---
+
+### Final Workflow
+1. **Data Collection**:
+   - Combine Kaggle data and Genius lyrics into a unified dataset.
+2. **Model Training**:
+   - Train a machine learning model on genre using audio features and lyrics.
+3. **Database Integration**:
+   - Load the songs and genres into a SQLite database.
+4. **User Interactions**:
+   - Implement Discord bot commands to fetch genres, run predictions, and save new songs.
+
+Would you like help implementing specific parts of this plan, such as Discord bot development, model training, or database integration?
