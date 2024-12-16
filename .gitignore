@@ -159,6 +159,9 @@ cython_debug/
 #  option (not recommended) you can uncomment the following to ignore the entire idea folder.
 #.idea/
 RougeGame
-scratch.ipynb
 INFO_4602/Red_Light_Camera_Locations_20241004.csv
 INFO_4602/Traffic_Crashes_-_Crashes_20241004.csv
+INFO_3510/3510.env
+INFO_3510/Project2-Genre-Classification/catboost_info
+INFO_3510/Project2-Genre-Classification/Genre Classification and Real-Time Interaction.pdf
+INFO_3510/Project2-Genre-Classification/catboost_info/catboost_training.json
