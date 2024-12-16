@@ -4,6 +4,8 @@ import lyricsgenius
 import pandas as pd
 import re
 from langdetect import detect, DetectorFactory
+import joblib
+import numpy as np
 
 
 def is_english(lyrics):
@@ -124,6 +126,9 @@ class Song:
                         with sqlite3.connect('data/spotify.db') as con:
                             cursor = con.cursor()
                             cursor.execute(
+                                'ALTER TABLE songs ADD COLUMN lyrics TEXT'
+                            )
+                            cursor.execute(
                                 'UPDATE songs SET lyrics = ? WHERE Title = ? AND Artist = ?',
                                 (self._lyrics, self.name, self.artist))
                             con.commit()
@@ -233,6 +238,7 @@ def filter_lyrics(text):
 
     return lyrics.strip()
 
+
 # def filter_lyrics(text):
 #     """
 #     Cleans lyrics data.
@@ -271,7 +277,7 @@ def filter_lyrics(text):
 #     return lyrics.strip()
 
 
-def get_lyrics(title, artist, genre):
+def get_lyrics(title, artist):
     try:
         GENIUS_CLIENT_ID = (
             'HBEdvu8RZHXDifNxoZSXBdXSapPiYoEFigthUL3Vo0Ork1pG0PD5hxo-umZXJYcx'
@@ -287,27 +293,59 @@ def get_lyrics(title, artist, genre):
         genius = lyricsgenius.Genius(genius_access_token)
         song = genius.search_song(title, artist)
         lyrics = song.lyrics
-        lyrics = filter_lyrics(lyrics)
-        new_row = pd.DataFrame({
-            'Title': [title],
-            'Artist': [artist],
-            'Lyrics': [lyrics],
-            'Genre': [genre]
-        })
-        new_row.to_csv('data/All-Songs-With-Lyrics.csv',
-                        mode='a', header=False)
+        lyrics = filter_lyrics(lyrics) 
     except Exception as e:
         print(f"Error fetching lyrics from Genius: {e}")
         lyrics = 'Lyrics not found.'
     return lyrics
 
-if __name__ == '__main__':
-    data = pd.read_csv('data/English-Songs.csv')
 
-    # Done already and sent to ^^^^
-    # data = pd.read_csv('data/All-Songs.csv')
-    # data = data[data['Title'].apply(is_english)]
+def predict_genre(song, artist) -> str:
+    try:
+        print(song, artist)
+        con = sqlite3.connect('data/spotify.db')
+        cursor = con.cursor()
+        cursor.execute('SELECT * FROM songs WHERE Title = ? AND Artist = ?', (song, artist))
+        song_data = cursor.fetchone()
+    except sqlite3.Error as e:
+        print(f"Database error: {e}")
+    if song_data is None:
+        return 'Song not found'
+    else:
+        song = Song(
+            name=song_data[0],
+            artist=song_data[1],
+            energy=song_data[3],
+            danceability=song_data[4],
+            loudness=song_data[5],
+            liveness=song_data[6],
+            valence=song_data[7],
+            acousticness=song_data[8],
+            speechiness=song_data[9],
+            popularity=song_data[10]
+        )
+    predict_data = np.array([
+        song.energy,
+        song.danceability,
+        song.loudness,
+        song.liveness,
+        song.valence,
+        song.acousticness,
+        song.speechiness,
+        song.popularity
+    ]).reshape(1, -1)
+    scaler = joblib.load('model/scaler.pkl')
+    label_encoder = joblib.load('model/label_encoder.pkl')
+    final_model = joblib.load('model/genre_model.pkl')
+    predict_data = scaler.fit_transform(predict_data)
+    genre = final_model.predict(predict_data)
+    genre = label_encoder.inverse_transform(genre)
+    con.close()
+    return genre[0]
+
+
+if __name__ == '__main__':
+    data = pd.read_csv('data/All-Songs.csv')
+    data = data[data['Title'].apply(is_english)]
+    data.to_csv('data/English-Songs.csv', index=False)
     
-    data['Lyrics'] = data.apply(
-        lambda x: get_lyrics(x['Title'], x['Artist'], x['Genre']), axis=1)
-    data.to_csv('data/English-Songs-With-Lyrics.csv', index=False)

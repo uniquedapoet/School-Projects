@@ -1,0 +1,121 @@
+# Music Genre Bot - README
+
+## Overview
+This bot uses **Discord** as an interface to interact with users and analyze songs. It predicts genres, retrieves lyrics, and provides insights based on a trained machine learning model and preloaded databases. The project integrates Discord API, Spotify datasets, Genius API, and multiple machine learning techniques.
+
+---
+
+## Features
+- **Predict Genre**: Predict the genre of a song using its title and artist name.
+- **Retrieve Lyrics**: Fetch lyrics for songs directly from the Genius API or the local database.
+- **Database Integration**: Store and query song metadata and genres from a SQLite database.
+- **User Interaction**: Provide an interactive experience through Discord commands.
+
+---
+
+## Installation
+
+1. **Clone the repository**:
+   ```bash
+   git clone <repository_url>
+   cd <repository_folder>
+   ```
+
+2. **Install dependencies**:
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+3. **Prepare the data**:
+   - Load and preprocess song data:
+     - Combine multiple datasets.
+     - Map specific genres to broader ones.
+     - Save cleaned data to `data/English-Songs.csv`.
+
+4. **Train the model**:
+   - Train and evaluate multiple models on the song dataset.
+   - Save the best model, scaler, and label encoder as `.pkl` files in the `model/` directory.
+
+5. **Run the bot**:
+   ```bash
+   python bot.py
+   ```
+
+---
+
+## Discord Commands
+
+### General Commands
+- **`!hello`**: Greets the user.
+- **`!greet`**: Provides a general greeting.
+
+### Music Analysis Commands
+- **`!what_genre_is [song title] by [artist]`**: Predicts the genre of a song using the machine learning model.
+- **`!real_genre [song title] by [artist]`**: Fetches the actual genre from the preloaded database.
+- **`!get_lyrics [song title] by [artist]`**: Retrieves the lyrics of a song via Genius API or the database.
+
+---
+
+## Data Processing
+
+### Datasets Used
+- **Spotify-2000.csv**
+- **Spotify-Tracks.csv**
+
+### Steps:
+1. Load, clean, and combine data from multiple sources.
+2. Map specific genres into broader categories (e.g., Pop, Rock, Hip-Hop).
+3. Save processed data into `English-Songs.csv`.
+
+### Database
+- SQLite database (`spotify.db`) stores song metadata, genres, and lyrics.
+
+---
+
+## Machine Learning
+
+### Models Used:
+- Logistic Regression, Random Forest, Gradient Boosting, XGBoost, CatBoost, etc.
+
+### Key Steps:
+1. **Feature Engineering**:
+   - Use features like energy, danceability, loudness, etc.
+   - Scale numerical features for better model performance.
+2. **Model Selection**:
+   - Compare multiple models using F1-score.
+   - Save the best-performing model.
+3. **Hyperparameter Tuning**:
+   - Use GridSearchCV to fine-tune the best model.
+
+### Outputs:
+- `genre_model.pkl`: Trained machine learning model.
+- `scaler.pkl`: StandardScaler object for preprocessing.
+- `label_encoder.pkl`: Encoder for mapping genres to numerical labels.
+
+---
+
+## Genius API Integration
+
+- Lyrics are fetched using the **Genius API**.
+- Lyrics not present in the database are retrieved from Genius and stored locally.
+
+---
+
+## Folder Structure
+```
+project/
+│
+├── bot.py                 # Discord bot script
+├── project_functions.py   # Helper functions and classes
+├── requirements.txt       # Required Python libraries
+├── data/                  # Folder for datasets and processed data
+│   ├── Spotify-2000.csv
+│   ├── Spotify-Tracks.csv
+│   └── English-Songs.csv
+├── model/                 # Folder for saved models
+│   ├── genre_model.pkl
+│   ├── scaler.pkl
+│   └── label_encoder.pkl
+└── README.md              # Project documentation
+```
+
