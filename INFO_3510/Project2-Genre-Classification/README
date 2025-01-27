@@ -104,7 +104,7 @@ This bot uses **Discord** as an interface to interact with users and analyze son
 ## Folder Structure
 ```
 project/
-│
+├── project.ipynb
 ├── bot.py                 # Discord bot script
 ├── project_functions.py   # Helper functions and classes
 ├── requirements.txt       # Required Python libraries

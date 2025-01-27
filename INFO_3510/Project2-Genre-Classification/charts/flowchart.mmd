@@ -1,0 +1,37 @@
+```mermaid
+---
+config:
+  layout: fixed
+---
+flowchart TB
+    A("Function: what_genre_is") --> C["Query the database"]
+    G("Function: fetch_lyrics") --> C
+    C --> D{"Is the song in the database?"}
+    D -- No --> E["Use genre prediction model"]
+    D -- Yes --> H["Retrieve genre from the database"]
+    E --> F["Add prediction results to the database"]
+    H --> I["Add fetched lyrics to the database"]
+    F --> J["Return information to user"]
+    I --> J
+     A:::function
+     C:::database
+     G:::function
+     D:::decision
+     E:::process
+     H:::process
+     F:::database
+     I:::database
+     J:::process
+    classDef function fill:#e9f6fc,stroke:#0062cc,stroke-width:2px
+    classDef database fill:#e6ffe6,stroke:#009933,stroke-width:2px
+    classDef decision fill:#ffeb99,stroke:#ffcc00,stroke-width:2px
+    classDef process fill:#ffe6f2,stroke:#cc33cc,stroke-width:2px
+    style A fill:#e9f6fc,stroke:#0062cc,stroke-width:2px
+    style C fill:#e6ffe6,stroke:#009933,stroke-width:2px
+    style G fill:#e9f6fc,stroke:#0062cc,stroke-width:2px
+    style D fill:#ffeb99,stroke:#ffcc00,stroke-width:2px
+    style E fill:#ffe6f2,stroke:#cc33cc,stroke-width:2px
+    style H fill:#ffe6f2,stroke:#cc33cc,stroke-width:2px
+    style F fill:#e6ffe6,stroke:#009933,stroke-width:2px
+    style I fill:#e6ffe6,stroke:#009933,stroke-width:2px
+```
