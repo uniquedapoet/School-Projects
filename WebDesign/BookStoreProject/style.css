@@ -1,0 +1,120 @@
+/* GENERAL */
+@import url("https://fonts.googleapis.com/css2?family=Rye&display=swap");
+
+* {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: "Rye", cursive;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+p {
+  color: rgb(93, 36, 36);
+}
+
+/* TRANSITION */
+
+a,
+.btn {
+  transition: all 300ms ease;
+}
+
+/* DESKTOP NAV */
+
+nav,
+.nav-links {
+  display: flex;
+}
+
+nav {
+  justify-content: space-around;
+  align-items: center;
+  height: 17vh;
+}
+
+.nav-links {
+  gap: 2rem;
+  list-style: none;
+  font-size: 1.5rem;
+}
+
+a {
+  color: rgb(93, 36, 36);
+  text-decoration: none;
+  text-decoration-color: white;
+}
+
+.a:hover {
+  color: grey;
+  text-decoration: underline;
+  text-underline-offset: 1rem;
+  text-decoration-color: rgb(181, 181, 181);
+}
+
+.logo {
+  font-size: 2rem;
+  color: rgb(93, 36, 36);
+}
+
+.logo:hover {
+  cursor: default;
+}
+
+/* Hero Section */
+#HeroSection {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 60vh;
+    background-image: url(assets/HeroImage.png);
+    background-size: cover;
+    background-position: center;
+    color: white;
+}
+
+.hero-text {
+    width: 50%;
+    text-align: center;
+}
+
+.hero-search {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.5rem;
+    background: black .5;
+    padding: 0.5rem;
+    border-radius: 5px;
+}
+
+.hero-search input {
+    width: 300px;
+    padding: 10px;
+    font-size: 1rem;
+    border: none;
+    border-radius: 5px;
+    outline: none;
+}
+
+/* Search Button */
+.searchButton {
+    background-color: #b85c42;
+    color: white;
+    text-decoration: none;
+    padding: 10px 15px;
+    font-size: 1rem;
+    border-radius: 5px;
+    border: none;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.searchButton:hover {
+    background-color: #a04836;
+}
