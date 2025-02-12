@@ -47,11 +47,9 @@ This bot uses **Discord** as an interface to interact with users and analyze son
 
 ### General Commands
 - **`!hello`**: Greets the user.
-- **`!greet`**: Provides a general greeting.
 
 ### Music Analysis Commands
 - **`!what_genre_is [song title] by [artist]`**: Predicts the genre of a song using the machine learning model.
-- **`!real_genre [song title] by [artist]`**: Fetches the actual genre from the preloaded database.
 - **`!get_lyrics [song title] by [artist]`**: Retrieves the lyrics of a song via Genius API or the database.
 
 ---
