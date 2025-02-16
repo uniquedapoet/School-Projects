@@ -1,0 +1,96 @@
+body {
+    font-family: sans-serif;
+    margin: 24px 48px 72px;
+    }
+    h1 {
+    margin: 12px 0 36px;
+    padding: 0 0 24px;
+    border-bottom: 1px solid #c7cdd1;
+    }
+    h1 + div {
+    display: flex;
+    gap: 48px;
+    }
+    nav,
+    aside {
+    flex: 1;
+    }
+    main {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    flex: 4;
+    }
+    button {
+    appearance: none;
+    cursor: pointer;
+    background-color: #f5f5f5;
+    border: 1px solid #c7cdd1;
+    border-radius: 3px;
+    font-family: sans-serif;
+    font-size: 1rem;
+    padding: 8px 14px;
+    }
+    button:hover {
+    background-color: #e8e8e8;
+    }
+    nav span {
+    display: block;
+    padding: 0 0 12px 12px;
+    font-style: italic;
+    font-size: 12px;
+    color: #444444;
+    }
+    nav div {
+    padding: 8px 0 8px 6px;
+    }
+    nav div a {
+    color: #0072bc;
+    text-decoration: none;
+    }
+    nav span + div {
+    border-left: 2px solid #2d3b45;
+    }
+    nav span + div a {
+    color: #2d3b45;
+    font-weight: bold;
+    }
+    nav a:hover {
+    text-decoration: underline;
+    }
+    main h2 {
+    margin: 0;
+    }
+    main h2,
+    main > div {
+    border-bottom: 1px solid #c7cdd1;
+    padding: 0 0 24px;
+    }
+    main button {
+    align-self: end;
+    }
+    main details {
+    border: 1px solid #c7cdd1;
+    }
+    main details summary {
+    background-color: #f5f5f5;
+    padding: 12px;
+    }
+    main details div {
+    border-top: 1px solid #c7cdd1;
+    padding: 12px;
+    }
+    aside div {
+    padding: 8px 0 8px 6px;
+    }
+    aside button {
+    text-align: left;
+    margin: 5px 0;
+    width: 100%;
+    }
+    aside h2 {
+    border-bottom: 1px solid #c7cdd1;
+    font-size: 1rem;
+    margin: 20px 0 6px;
+    padding: 0 0 6px;
+    }

@@ -8,6 +8,7 @@
 
 body {
   font-family: "Rye", cursive;
+
 }
 
 html {
@@ -18,14 +19,16 @@ p {
   color: rgb(93, 36, 36);
 }
 
-/* TRANSITION */
+h2 {
+  color: rgb(93, 36, 36);
+}
+
 
 a,
 .btn {
   transition: all 300ms ease;
 }
 
-/* DESKTOP NAV */
 
 nav,
 .nav-links {
@@ -67,20 +70,23 @@ a {
 }
 
 /* Hero Section */
-#HeroSection {
+#Hero {
     display: flex;
     justify-content: center;
     align-items: center;
+    text-align: center;
     height: 60vh;
     background-image: url(assets/HeroImage.png);
     background-size: cover;
     background-position: center;
     color: white;
+    padding: 2rem;
 }
 
 .hero-text {
     width: 50%;
     text-align: center;
+    margin: auto;
 }
 
 .hero-search {
@@ -117,4 +123,45 @@ a {
 
 .searchButton:hover {
     background-color: #a04836;
+}
+
+/* Bookshelf */
+#bookshelf {
+    text-align: center;
+    padding: 4rem 0;
+    background: #f8f1e5; 
+}
+
+#bookshelf h2 {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+    color: #5a3826;
+}
+
+.bookshelf-container {
+    display: flex;
+    justify-content: center;
+    gap: 1.5rem;
+    padding: 1rem;
+    flex-wrap: wrap;
+}
+
+.book {
+    width: 150px;
+    text-align: center;
+}
+
+.book img {
+    width: 100%;
+    height: 225px;
+    gap: 0 2rem;
+    border-radius: 5px;
+    box-shadow: 2px 4px 6px rgba(0, 0, 0, 0.2);
+}
+
+.book p {
+    margin-top: 0.5rem;
+    font-size: 1rem;
+    font-weight: bold;
+    color: #3b2a1a;
 }
