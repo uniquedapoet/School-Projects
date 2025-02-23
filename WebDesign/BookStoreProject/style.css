@@ -1,3 +1,17 @@
+/* Primary Colors:
+
+Deep Red: #5D2424
+Rich Brown: #3B2A1A
+Complementary Colors:
+
+Muted Teal: #2A5D5D
+Soft Sage Green: #5D5D2A
+Accent Colors:
+
+Warm Beige: #F8F1E5
+Dusty Rose: #A04836
+ */
+
 /* GENERAL */
 @import url("https://fonts.googleapis.com/css2?family=Rye&display=swap");
 
@@ -8,6 +22,7 @@
 
 body {
   font-family: "Rye", cursive;
+  overflow-x: hidden;
 
 }
 
@@ -16,11 +31,11 @@ html {
 }
 
 p {
-  color: rgb(93, 36, 36);
+  color: 3B2A1A;
 }
 
 h2 {
-  color: rgb(93, 36, 36);
+  color: 3B2A1A;
 }
 
 
@@ -38,7 +53,10 @@ nav,
 nav {
   justify-content: space-around;
   align-items: center;
+  position: fixed;
+  width: 100%;
   height: 17vh;
+  background-color: #3B2A1A;
 }
 
 .nav-links {
@@ -48,7 +66,7 @@ nav {
 }
 
 a {
-  color: rgb(93, 36, 36);
+  color:#F8F1E5;
   text-decoration: none;
   text-decoration-color: white;
 }
@@ -62,7 +80,7 @@ a {
 
 .logo {
   font-size: 2rem;
-  color: rgb(93, 36, 36);
+  color: #F8F1E5;
 }
 
 .logo:hover {
@@ -79,7 +97,7 @@ a {
     background-image: url(assets/HeroImage.png);
     background-size: cover;
     background-position: center;
-    color: white;
+    color: #F8F1E5;
     padding: 2rem;
 }
 
@@ -94,6 +112,7 @@ a {
     justify-content: center;
     align-items: center;
     gap: 0.5rem;
+    color: #F8F1E5;
     background: black .5;
     padding: 0.5rem;
     border-radius: 5px;
@@ -110,8 +129,8 @@ a {
 
 /* Search Button */
 .searchButton {
-    background-color: #b85c42;
-    color: white;
+    background-color: #A04836;
+    color: #F8F1E5;
     text-decoration: none;
     padding: 10px 15px;
     font-size: 1rem;
@@ -129,7 +148,7 @@ a {
 #bookshelf {
     text-align: center;
     padding: 4rem 0;
-    background: #f8f1e5; 
+    background: #F8F1E5; 
 }
 
 #bookshelf h2 {
@@ -165,3 +184,105 @@ a {
     font-weight: bold;
     color: #3b2a1a;
 }
+
+.container {
+  display: flex;
+  height: 100vh; 
+}
+
+.book-image {
+  position: fixed;
+  width: 40%; 
+  height: 100%;
+  top: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  box-sizing: border-box;
+}
+
+.book-image img {
+  max-width: 100%;
+  max-height: 100%;
+  border-radius: 5px;
+}
+
+.content {
+  margin-left: 40%;
+  width: calc(60% - 2rem);
+  height: 100%;
+  overflow-y: auto; 
+  padding-top: 45rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+}
+
+
+.flex-container {
+  display: flex;
+  justify-content: center; 
+}
+
+.box {
+  width: 25%; 
+  padding: 1rem;
+  margin-bottom: 2rem;
+  height: inherit;
+  color: #F8F1E5;
+  background-color: #2A5D5D;
+  border-radius: 10px;
+  text-align: center;
+  border: 1px solid #000;
+}
+
+.box:hover {
+  background-color: #5D5D2A;
+}
+
+.add-to-cart {
+  background-color: #5D2424;
+  width: 20rem;
+  height: 3rem;
+  color: #F8F1E5;
+  margin: 1rem 1rem;
+  border-radius: 5px;
+  font-weight: bold;
+}
+
+.add-to-wishlist {
+  background-color: #5D2424;
+  width: 20rem;
+  height: 3rem;
+  color: #F8F1E5;
+  margin: 1rem 1rem;
+  border-radius: 5px;
+  font-weight: bold;
+}
+
+.review-container {
+  display: flex;
+  flex-direction: column;
+  padding: 2rem;
+}
+
+.stars img {
+  width: 40px;
+  height: 40px;
+}
+
+.book-description {
+  font-size: 1.2rem;
+  color: #3B2A1A;
+  text-align: left;
+}
+
+.product-details {
+  font-size: 1.2rem;
+  color: #3B2A1A;
+  text-align: left;
+  padding: 2rem;
+}
+
