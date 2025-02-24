@@ -167,3 +167,6 @@ INFO_3510/Project2-Genre-Classification/Genre Classification and Real-Time Inter
 INFO_3510/Project2-Genre-Classification/catboost_info/catboost_training.json
 INFO_3510/Project2-Genre-Classification/3510.env
 INFO_3510/Project2-Genre-Classification 2/catboost_info
+WebDesign/my-app/node_modules
+WebDesign/my-app/package-lock.json
+Python-Projects/NFL-Offense-Analysis/raw-data
