@@ -100,9 +100,9 @@
       };
 
       // All of your code should go below this line.
-
       const ReadingListFeature = () => {
         const [searchTerm, setSearchTerm] = React.useState("");
+        const [strikedBooks, setStrikedBooks] = React.useState({});
 
         const handleSearch = (event) => {
           setSearchTerm(event.target.value.toLowerCase());
@@ -115,12 +115,10 @@
         };
 
         const handleStrike = (bookId) => {
-          const strikedItem = document.getElementById(bookId);
-          if (strikedItem.style.textDecoration === "line-through") {
-            strikedItem.style.textDecoration = "none";
-          } else {
-            strikedItem.style.textDecoration = "line-through";
-          }
+          setStrikedBooks((prev) => ({
+            ...prev,
+            [bookId]: !prev[bookId],
+          }));
         };
 
         return (
@@ -129,7 +127,6 @@
             <input
               type="text"
               placeholder="Search for a book..."
-              id="search"
               onChange={handleSearch}
             />
             <ul>
@@ -140,22 +137,35 @@
                   <li key={genre.id}>
                     <h2>{genre.name}</h2>
                     <ul>
-                      {
-                        filteredBooks.map((bookId) => (
-                          <li key={bookId}>
-                            <h3
-                              id={bookId}
-                              onClick={() => handleStrike(bookId)}
-                            >
-                              {booksById[bookId].title} by{" "}
-                              {booksById[bookId].author}
-                            </h3>
-                          </li>
-                        ))
-                      }
+                      {filteredBooks.map((bookId) => (
+                        <li
+                          key={bookId}
+                          style={{
+                            display: "flex",
+                            gap: "10px",
+                          }}
+                        >
+                          <input
+                            type="checkbox"
+                            checked={!!strikedBooks[bookId]}
+                            onChange={() => handleStrike(bookId)}
+                          />
+                          <h3
+                            style={{
+                              textDecoration: strikedBooks[bookId]
+                                ? "line-through"
+                                : "none",
+                            }}
+                            onClick={() => handleStrike(bookId)}
+                          >
+                            {booksById[bookId].title} by{" "}
+                            {booksById[bookId].author}
+                          </h3>
+                        </li>
+                      ))}
                     </ul>
                   </li>
-                );
+                ) 
               })}
             </ul>
           </div>
