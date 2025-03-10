@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>My Reading List</title>
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="text/babel">
+      const genres = [
+        { id: "genre-1", name: "Fantasy" },
+        { id: "genre-2", name: "Historical Fiction" },
+        { id: "genre-3", name: "Horror" },
+        { id: "genre-4", name: "Mystery & Thriller" },
+        { id: "genre-5", name: "Science Fiction" },
+      ];
+
+      const booksById = {
+        "e46af1ea-ad2f-48df-8db7-e29f45ab364f": {
+          title: "A Throne of Games",
+          author: "Martin R.R. George",
+        },
+        "d07a05b3-88af-4508-8408-bba29e7f655c": {
+          title: "The Prince Bridegroom",
+          author: "William S. Morgenstern",
+        },
+        "d26ba9f4-fcd3-4dc7-8849-38f884caf3fb": {
+          title: "Roar's Stationary Castle",
+          author: "Diane Jonas Wynne",
+        },
+        "2ac5252a-ffdc-4fc6-95e4-51628f5f1f3b": {
+          title: "Away with the Wind",
+          author: "Michelle Margaret",
+        },
+        "b3160f16-7886-4a5e-8387-f5440d28161c": {
+          title: "A Tale of Two Sitters",
+          author: "Charles Kiddens",
+        },
+        "452919d4-7126-4c09-8a85-099c9f8411cb": {
+          title: "The Shimmering",
+          author: "Stephen Queen",
+        },
+        "b7928291-991b-4b4e-8166-04a9821df833": {
+          title: "Old Frankenstein",
+          author: "Shelley Mary",
+        },
+        "abef4337-8f7a-43f0-929a-1c992f2ed884": {
+          title: "The Leonardo Code",
+          author: "Dan Tan",
+        },
+        "f32ef465-187e-4b96-8532-0f3057d66f01": {
+          title: "And Then There Were Some",
+          author: "Crissie Agatha",
+        },
+        "735092c1-f050-4b69-b272-52f4bfab1a65": {
+          title: "The Right Hand of Lightness",
+          author: "Ursula Penn Guin",
+        },
+        "5491b351-e5d2-4427-b231-108805944302": {
+          title: "2101: Yet Another Space Odyssey",
+          author: "Art C. Clarthur",
+        },
+        "f23e8a25-b35e-4f99-8659-7a107edc977b": {
+          title: "A Tinkle in Rhyme",
+          author: "Maddie L'Angle",
+        },
+        "35122f46-e11f-4123-acf5-d57709027207": {
+          title: "You, Robot",
+          author: "Isaac Aismauve",
+        },
+      };
+
+      const readingListByGenre = {
+        "genre-1": [
+          "e46af1ea-ad2f-48df-8db7-e29f45ab364f",
+          "d07a05b3-88af-4508-8408-bba29e7f655c",
+          "d26ba9f4-fcd3-4dc7-8849-38f884caf3fb",
+        ],
+        "genre-2": [
+          "2ac5252a-ffdc-4fc6-95e4-51628f5f1f3b",
+          "b3160f16-7886-4a5e-8387-f5440d28161c",
+        ],
+        "genre-3": [
+          "452919d4-7126-4c09-8a85-099c9f8411cb",
+          "b7928291-991b-4b4e-8166-04a9821df833",
+        ],
+        "genre-4": [
+          "abef4337-8f7a-43f0-929a-1c992f2ed884",
+          "f32ef465-187e-4b96-8532-0f3057d66f01",
+        ],
+        "genre-5": [
+          "735092c1-f050-4b69-b272-52f4bfab1a65",
+          "5491b351-e5d2-4427-b231-108805944302",
+          "f23e8a25-b35e-4f99-8659-7a107edc977b",
+          "35122f46-e11f-4123-acf5-d57709027207",
+        ],
+      };
+
+      // All of your code should go below this line.
+      const ReadingListFeature = () => {
+        const [searchTerm, setSearchTerm] = React.useState("");
+        const [strikedBooks, setStrikedBooks] = React.useState({});
+
+        const handleSearch = (event) => {
+          setSearchTerm(event.target.value.toLowerCase());
+        };
+
+        const getFilteredBooks = (genreId) => {
+          return readingListByGenre[genreId].filter((bookId) =>
+            booksById[bookId].title.toLowerCase().startsWith(searchTerm)
+          );
+        };
+
+        const handleStrike = (bookId) => {
+          setStrikedBooks((prev) => ({
+            ...prev,
+            [bookId]: !prev[bookId],
+          }));
+        };
+
+        return (
+          <div>
+            <h1>My Reading List</h1>
+            <input
+              type="text"
+              placeholder="Search for a book..."
+              onChange={handleSearch}
+            />
+            <ul>
+              {genres.map((genre) => {
+                const filteredBooks = getFilteredBooks(genre.id);
+
+                return (
+                  <li key={genre.id}>
+                    <h2>{genre.name}</h2>
+                    <ul>
+                      {filteredBooks.length > 0 ? (
+                        filteredBooks.map((bookId) => (
+                          <li
+                            key={bookId}
+                            style={{
+                              display: "flex",
+                              gap: "10px",
+                            }}
+                          >
+                            <input
+                              type="checkbox"
+                              checked={!!strikedBooks[bookId]}
+                              onChange={() => handleStrike(bookId)}
+                            />
+                            <h3
+                              style={{
+                                textDecoration: strikedBooks[bookId]
+                                  ? "line-through"
+                                  : "none",
+                              }}
+                              onClick={() => handleStrike(bookId)}
+                            >
+                              {booksById[bookId].title} by{" "}
+                              {booksById[bookId].author}
+                            </h3>
+                          </li>
+                        ))
+                      ) : (
+                        <li>No Books Found</li>
+                      )}
+                    </ul>
+                  </li>
+                );
+              })}
+            </ul>
+          </div>
+        );
+      };
+
+      // All of your code should go above this line.
+
+      const container = document.getElementById("root");
+      const root = ReactDOM.createRoot(container);
+      root.render(<ReadingListFeature />);
+    </script>
+  </body>
+</html>
