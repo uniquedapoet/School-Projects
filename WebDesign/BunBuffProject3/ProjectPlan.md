@@ -1,8 +1,4 @@
-Got it! I'll focus on the **higher-level concepts** and **project-specific breakdowns**, assuming you have a basic grasp of React and JavaScript. Let’s structure this step by step so you can build it effectively.
-
----
-
-## **🔹 Phase 1: Project Scope & Setup (1 Day)**
+## **🔹 Phase 1: Project Scope & Setup (Day 1)**
 ### **Key Concepts:**
 - **State Management:** Use `useState` for tracking game variables.
 - **Rendering:** React will update the UI dynamically as the simulation progresses.
@@ -29,7 +25,7 @@ Got it! I'll focus on the **higher-level concepts** and **project-specific break
 
 ---
 
-## **🔹 Phase 2: Building the UI (2-3 Days)**
+## **🔹 Phase 2: Building the UI (Day 2-3)**
 ### **Key Concepts:**
 - **Props & State:** Pass simulation parameters from `ControlPanel` to `App`.
 - **Grid Rendering:** Use `.map()` to generate a visual grid.
@@ -54,7 +50,7 @@ Got it! I'll focus on the **higher-level concepts** and **project-specific break
 
 ---
 
-## **🔹 Phase 3: Implement Game Logic (4-5 Days)**
+## **🔹 Phase 3: Implement Game Logic (Day 4-5)**
 ### **Key Concepts:**
 - **Updating State on Each Step:** `useState` will track bunbuffs and their attributes.
 - **Handling Movement:** Bunbuffs move randomly but stay within grid limits.
