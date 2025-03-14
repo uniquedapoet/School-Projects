@@ -1,7 +1,7 @@
 import React from "react";
 import { useState } from "react";
 
-export default function ControlPanel({ settings, onStartSimulation }) {
+export default function ControlPanel({ settings, onStartSimulation, onAdvanceSimulation }) {
   const [gridSize, setGridSize] = useState(settings.gridSize);
   const [initialPopulation, setInitialPopulation] = useState(
     settings.initialPopulation
@@ -10,6 +10,7 @@ export default function ControlPanel({ settings, onStartSimulation }) {
   const [maxLitterSize, setMaxLitterSize] = useState(settings.maxLitterSize);
   const [minAggression, setMinAggression] = useState(settings.minAggression);
   const [maxAggression, setMaxAggression] = useState(settings.maxAggression);
+  const [isRunning, setIsRunning] = useState(false);
 
   console.log(onStartSimulation);
 
@@ -41,6 +42,8 @@ export default function ControlPanel({ settings, onStartSimulation }) {
       minAggression,
       maxAggression,
     });
+
+    setIsRunning(true);
   };
 
   return (
@@ -117,9 +120,15 @@ export default function ControlPanel({ settings, onStartSimulation }) {
           onChange={(e) => setMaxAggression(e.target.value)}
         />
       </label>
-      <button id="start-simulation" onClick={startSimulation}>
-        Start Simulation
-      </button>
+      {!isRunning ? (
+        <button id="start-simulation" onClick={startSimulation}>
+          Start Simulation
+        </button>
+      ) : (
+        <button id="next-step" onClick={onAdvanceSimulation}>
+          Next Step
+        </button>
+      )}
     </div>
   );
 }

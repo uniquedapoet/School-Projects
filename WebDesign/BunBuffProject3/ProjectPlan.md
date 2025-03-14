@@ -28,7 +28,7 @@
 ## **🔹 Phase 2: Building the UI (Day 2-3)**
 ### **Key Concepts:**
 - **Props & State:** Pass simulation parameters from `ControlPanel` to `App`.
-- **Grid Rendering:** Use `.map()` to generate a visual grid.
+- **Grid Rendering:** Use loop to generate a visual grid.
 - **CSS Grid:** Style the grid layout for bunbuff movement.
 
 ### **What to Do:**

@@ -25,6 +25,14 @@ function App() {
     setSettings(settings);
   };
 
+  const advanceSimulation = () => {
+    console.log("Advancing simulation to next step...");
+    setStepCount((prev) => prev + 1);
+    // Here you'll update bunbuff positions, handle fights, reproduction, etc.
+  };
+
+
+
   return (
 <div className="App">
   <div
@@ -61,9 +69,9 @@ function App() {
         backgroundColor: "#f9f9f9",
       }}
     >
-      <ControlPanel settings={settings} onStartSimulation={startSimulation} />
+      <ControlPanel settings={settings} onStartSimulation={startSimulation} onAdvanceSimulation={advanceSimulation} />
     </div>
-    <Grid gridSize={settings.gridSize} />
+    <Grid settings={settings} />
   </div>
 </div>
 
