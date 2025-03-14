@@ -1,7 +1,10 @@
 import React from "react";
 import { useState } from "react";
 
-export default function ControlPanel({ settings, onStartSimulation, onAdvanceSimulation }) {
+export default function ControlPanel({
+  settings,
+  onStartSimulation,
+}) {
   const [gridSize, setGridSize] = useState(settings.gridSize);
   const [initialPopulation, setInitialPopulation] = useState(
     settings.initialPopulation
@@ -120,15 +123,10 @@ export default function ControlPanel({ settings, onStartSimulation, onAdvanceSim
           onChange={(e) => setMaxAggression(e.target.value)}
         />
       </label>
-      {!isRunning ? (
-        <button id="start-simulation" onClick={startSimulation}>
-          Start Simulation
-        </button>
-      ) : (
-        <button id="next-step" onClick={onAdvanceSimulation}>
-          Next Step
-        </button>
-      )}
+
+      <button id="start-simulation" onClick={startSimulation}>
+        Start Simulation
+      </button>
     </div>
   );
 }
