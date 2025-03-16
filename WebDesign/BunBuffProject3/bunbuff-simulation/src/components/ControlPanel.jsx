@@ -15,7 +15,6 @@ export default function ControlPanel({
   const [maxAggression, setMaxAggression] = useState(settings.maxAggression);
   const [isRunning, setIsRunning] = useState(false);
 
-  console.log(onStartSimulation);
 
   const startSimulation = (event) => {
     event.preventDefault();
