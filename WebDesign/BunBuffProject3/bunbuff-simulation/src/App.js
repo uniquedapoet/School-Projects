@@ -1,14 +1,9 @@
-import logo from "./logo.svg";
-import "./App.css";
 import React from "react";
 import { useState } from "react";
-import ControlPanel from "./Components/ControlPanel";
+// Add Restart Function
+// Create Design Doc
 
 function App() {
-  const [monthCount, setMonthCount] = useState(0);
-  const [isRunning, setIsRunning] = useState(false);
-  const [log, setLog] = useState([]);
-  const [grid, setGrid] = useState([]);
   const [settings, setSettings] = useState({
     gridSize: { M: 5, N: 5 },
     initialPopulation: 1,
@@ -17,6 +12,19 @@ function App() {
     minAggression: 1,
     maxAggression: 99,
   });
+  const [monthCount, setMonthCount] = useState(0);
+  const [isRunning, setIsRunning] = useState(false);
+  const [log, setLog] = useState([]);
+  const [grid, setGrid] = useState([]);
+  const [gridSize, setGridSize] = useState(settings.gridSize);
+  const [initialPopulation, setInitialPopulation] = useState(
+    settings.initialPopulation
+  );
+  const [maxLifespan, setMaxLifespan] = useState(settings.maxLifespan);
+  const [maxLitterSize, setMaxLitterSize] = useState(settings.maxLitterSize);
+  const [minAggression, setMinAggression] = useState(settings.minAggression);
+  const [maxAggression, setMaxAggression] = useState(settings.maxAggression);
+
   const [stats, setStats] = useState({
     Month: monthCount,
     totalBuns: settings.initialPopulation,
@@ -26,10 +34,27 @@ function App() {
     averageDeaths: 0,
   });
 
-  const startSimulation = (newSettings) => {
+  function startSimulation(newSettings) {
+    if (
+      newSettings.gridSize.M <= 0 ||
+      newSettings.gridSize.N <= 0 ||
+      newSettings.gridSize.M > 20 ||
+      newSettings.gridSize.N > 20 ||
+      newSettings.initialPopulation <= 0 ||
+      newSettings.maxLifespan <= 0 ||
+      newSettings.maxLitterSize <= 0 ||
+      newSettings.minAggression < 1 ||
+      newSettings.minAggression > 99 ||
+      newSettings.maxAggression < 1 ||
+      newSettings.maxAggression > 99
+    ) {
+      alert("Please enter valid inputs");
+      return;
+    }
+    setMonthCount(1); // Fix: Ensure month count resets before other state updates.
     setSettings(newSettings);
     setStats({
-      Month: monthCount,
+      Month: 1,
       totalBuns: newSettings.initialPopulation,
       bunsAlive: newSettings.initialPopulation,
       averageLifeSpan: 0,
@@ -39,9 +64,8 @@ function App() {
     setIsRunning(true);
     const newGrid = initializeGrid(newSettings);
     setGrid(newGrid);
-    setMonthCount(1);
-    updateLog("Simulation started, Month: " + monthCount);
-  };
+    updateLog("Simulation started, Month: 1"); // Fix: Ensure correct month logs
+  }
 
   const initializeGrid = (settings) => {
     let tempGrid = [];
@@ -76,46 +100,39 @@ function App() {
   };
 
   const moveBuns = () => {
-    let newGrid = grid.map((cell) => ({
-      ...cell,
-      buns: [...cell.buns],
-    }));
-
-    let updatedGrid = newGrid.map((cell) => ({
+    let updatedGrid = grid.map((cell) => ({
       ...cell,
       buns: [],
     }));
 
-    for (let i = 0; i < newGrid.length; i++) {
-      let cell = newGrid[i];
-      let originalBuns = cell.buns;
-
-      for (let bun of originalBuns) {
+    for (let cell of grid) {
+      for (let bun of cell.buns) {
         let newX = bun.x + Math.floor(Math.random() * 3) - 1;
         let newY = bun.y + Math.floor(Math.random() * 3) - 1;
 
         if (
-          newX >= 0 &&
-          newX < settings.gridSize.M &&
-          newY >= 0 &&
-          newY < settings.gridSize.N
+          newX < 0 ||
+          newX >= settings.gridSize.M ||
+          newY < 0 ||
+          newY >= settings.gridSize.N
         ) {
-          let newCell = updatedGrid.find(
-            (cell) => cell.x === newX && cell.y === newY
+          newX = bun.x;
+          newY = bun.y;
+        }
+
+        let newCell = updatedGrid.find((c) => c.x === newX && c.y === newY);
+
+        if (newCell.buns.length < 2) {
+          newCell.buns.push({ ...bun, x: newX, y: newY });
+        } else {
+          let originalCell = updatedGrid.find(
+            (c) => c.x === bun.x && c.y === bun.y
           );
-          if (newCell.buns.length < 2) {
-            bun.x = newX;
-            bun.y = newY;
-            newCell.buns.push(bun);
-          } else {
-            let originalCell = updatedGrid.find(
-              (cell) => cell.x === bun.x && cell.y === bun.y
-            );
-            originalCell.buns.push(bun);
-          }
+          originalCell.buns.push(bun);
         }
       }
     }
+
     setGrid(updatedGrid);
   };
 
@@ -287,10 +304,95 @@ function App() {
           }}
         >
           {!isRunning ? (
-            <ControlPanel
-              settings={settings}
-              onStartSimulation={startSimulation}
-            />
+            <div
+              id="ControlPanel"
+              style={{
+                display: "flex",
+                textAlign: "left",
+                flexDirection: "column",
+                gap: ".5rem",
+                margin: "2rem",
+              }}
+            >
+              <h2>Control Panel</h2>
+              <p>Set initial game inputs!</p>
+              <label>
+                Grid Size:
+                <input
+                  type="number"
+                  value={gridSize.N}
+                  placeholder="N"
+                  onChange={(input) =>
+                    setGridSize({ ...gridSize, N: input.target.value })
+                  }
+                />
+                <input
+                  type="number"
+                  value={gridSize.M}
+                  placeholder="M"
+                  onChange={(input) =>
+                    setGridSize({ ...gridSize, M: input.target.value })
+                  }
+                />
+              </label>
+              <label>
+                Initial Population
+                <input
+                  type="number"
+                  value={initialPopulation}
+                  placeholder="Initial Population"
+                  onChange={(e) => setInitialPopulation(e.target.value)}
+                />
+              </label>
+              <label>
+                Max Lifespan
+                <input
+                  type="number"
+                  value={maxLifespan}
+                  placeholder="Max Lifespan"
+                  onChange={(e) => setMaxLifespan(e.target.value)}
+                />
+              </label>
+              <label>
+                Max Litter Size
+                <input
+                  type="number"
+                  value={maxLitterSize}
+                  placeholder="Max Litter Size"
+                  onChange={(e) => setMaxLitterSize(e.target.value)}
+                />
+              </label>
+              <label>
+                Aggression
+                <input
+                  type="number"
+                  value={minAggression}
+                  placeholder="Min Aggression"
+                  onChange={(e) => setMinAggression(e.target.value)}
+                />
+                <input
+                  type="number"
+                  value={maxAggression}
+                  placeholder="Max Aggression"
+                  onChange={(e) => setMaxAggression(e.target.value)}
+                />
+              </label>
+              <button
+                id="start-simulation"
+                onClick={() =>
+                  startSimulation({
+                    gridSize,
+                    initialPopulation,
+                    maxLifespan,
+                    maxLitterSize,
+                    minAggression,
+                    maxAggression,
+                  })
+                }
+              >
+                Start Simulation
+              </button>
+            </div>
           ) : (
             <div
               id="Stats"
