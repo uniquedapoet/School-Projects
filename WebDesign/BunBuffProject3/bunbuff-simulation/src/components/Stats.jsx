@@ -4,7 +4,7 @@ import { useState } from "react";
 
 export default function Stats({settings,  onAdvanceSimulation}) {
     const [stats, setStats] = useState({
-        totalBuns: 0,
+        totalBuns: settings.initialPopulation,
         totalLitters: 0,
         totalDeaths: 0,
         totalFights: 0,
@@ -31,6 +31,7 @@ export default function Stats({settings,  onAdvanceSimulation}) {
         <p>Total Fights: {stats.totalFights}</p>
         <p>Total Reproductions: {stats.totalReproductions}</p>
         <p>Total Survivors: {stats.totalSurvivors}</p>
+        <p>Months: {stats.months}</p>
         <button id="next-step" onClick={onAdvanceSimulation}>
           Next Step
         </button>
