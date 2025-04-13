@@ -49,7 +49,7 @@
           averageDeaths: 0,
         });
 
-        function startSimulation(newSettings) {
+        const startSimulation = (newSettings) => {
           if (
             newSettings.gridSize.M <= 0 ||
             newSettings.gridSize.N <= 0 ||
@@ -66,7 +66,7 @@
             alert("Please enter valid inputs");
             return;
           }
-          setMonthCount(1); // Fix: Ensure month count resets before other state updates.
+          setMonthCount(1);
           setSettings(newSettings);
           setStats({
             Month: 1,
@@ -79,8 +79,9 @@
           setIsRunning(true);
           const newGrid = initializeGrid(newSettings);
           setGrid(newGrid);
-          updateLog("Simulation started, Month: 1"); // Fix: Ensure correct month logs
-        }
+          console.log(newGrid);
+          updateLog("Simulation started, Month: 1");
+        };
 
         const initializeGrid = (settings) => {
           let tempGrid = [];
@@ -281,8 +282,11 @@
             bunsAlive: prevStats.bunsAlive - totalDeaths + totalBirths,
             totalBuns: prevStats.totalBuns + totalBirths,
             averageLifeSpan:
-              (prevStats.averageLifeSpan * (monthCount -1) + totalDeaths) / monthCount,
-            averageBirths: (prevStats.averageBirths * (monthCount -1) + totalBirths) / monthCount,
+              (prevStats.averageLifeSpan * (monthCount - 1) + totalDeaths) /
+              monthCount,
+            averageBirths:
+              (prevStats.averageBirths * (monthCount - 1) + totalBirths) /
+              monthCount,
           }));
 
           setGrid(newGrid);
@@ -297,7 +301,7 @@
 
         const showSimulationControls = () => {
           setIsRunning(false);
-        }
+        };
 
         return (
           <div className="App">
@@ -439,7 +443,7 @@
                     <p>Month: {monthCount}</p>
                     <p>Total Buns: {stats.totalBuns}</p>
                     <p>Buns Alive: {stats.bunsAlive}</p>
-                    <p>Average Life Span: {stats.averageLifeSpan}</p>
+                    <p>Average Lifespan: {stats.averageLifeSpan}</p>
                     <p>Average Births: {stats.averageBirths}</p>
                     <button id="next-step" onClick={moveBuns}>
                       Move
@@ -448,7 +452,7 @@
                       Fight, Reproduce & Advance Month
                     </button>
                     <button id="next-step" onClick={showSimulationControls}>
-                      Show Simulation Controls To Restart
+                      Reset{" "}
                     </button>
                   </div>
                 )}
@@ -533,7 +537,8 @@
                     ))}
                   </div>
                 </div>
-              ) : null}
+              ) :      
+            }
             </div>
           </div>
         );
@@ -544,6 +549,7 @@
       const container = document.getElementById("root");
       const root = ReactDOM.createRoot(container);
       root.render(<App />);
+
     </script>
   </body>
 </html>
