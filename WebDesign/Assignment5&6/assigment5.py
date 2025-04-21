@@ -92,7 +92,7 @@ def add_item(item: ItemSchema):
         item = Item(**item)
         session.add(item)
         session.commit()
-        return {"message": "Item Added", "item": serialize_item(item)}, 200
+        return {"message": "Item Added", "item": serialize_item(item)}
     except IntegrityError as e:
         return {"error": f"Error Adding Item: {str(e)}"}, 500
     finally:
@@ -108,7 +108,7 @@ def check_item(item_name: str):
             return {"error": "Item not found"}, 404
         item.purchased = True
         session.commit()
-        return {"message": "Item Checked"}, 200
+        return {"message": "Item Checked"}
     except IntegrityError as e:
         return {"error": f"Error checking item: {str(e)}"}, 500
     finally:
@@ -124,7 +124,7 @@ def uncheck_item(item_name: str):
             return {"error": "Item not found"}, 404
         item.purchased = False
         session.commit()
-        return {"message": "Item Unchecked"}, 200
+        return {"message": "Item Unchecked"}
     except IntegrityError as e:
         return {"error": f"Error checking item: {str(e)}"}, 500
     finally:
@@ -137,7 +137,7 @@ def search(search_string: str):
     try:
         items = session.query(Item).filter(
             Item.item.ilike(f"%{search_string}%")).all()
-        return {'items': [serialize_item(item) for item in items]}, 200
+        return {'items': [serialize_item(item) for item in items]}
     except IntegrityError as e:
         return {"error": f"Error Searching for Items {e}"}, 400
     finally:
@@ -149,7 +149,7 @@ def sort():
     session = Session()
     try:
         items = session.query(Item).order_by(desc(Item.quantity)).all()
-        return {'items': [serialize_item(item) for item in items]}, 200
+        return {'items': [serialize_item(item) for item in items]}
     except IntegrityError as e:
         return {"error": f"Error Searching for Items {e}"}, 400
     finally:
@@ -161,7 +161,7 @@ def items():
     session = Session()
     try:
         items = session.query(Item).all()
-        return {'items': [serialize_item(item) for item in items]}, 200
+        return {'items': [serialize_item(item) for item in items]}
     except IntegrityError as e:
         return {'error': f"Error getting items {e}"}, 500
     finally:
