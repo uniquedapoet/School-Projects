@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <title>Item Manager</title>
+  <style>
+    body { font-family: sans-serif; padding: 20px; }
+    input, button { margin: 5px; }
+    .item { margin: 5px 0; }
+  </style>
+</head>
+<body>
+  <h1>Item Manager</h1>
+
+  <div>
+    <h3>Add Item</h3>
+    <input id="add-name" placeholder="Item name" />
+    <input id="add-qty" type="number" placeholder="Quantity" />
+    <button onclick="addItem()">Add</button>
+  </div>
+
+  <div>
+    <h3>Search Items</h3>
+    <input id="search-text" placeholder="Search..." />
+    <button onclick="searchItems()">Search</button>
+  </div>
+
+  <div>
+    <h3>Items <button onclick="getItems()">Refresh</button> <button onclick="sortItems()">Sort</button></h3>
+    <ul id="item-list"></ul>
+  </div>
+
+  <script>
+    const API_URL = 'http://localhost:5005';
+
+    function displayItems(items) {
+      const list = document.getElementById('item-list');
+      list.innerHTML = '';
+      items.forEach(item => {
+        const li = document.createElement('li');
+        li.className = 'item';
+        li.innerHTML = `${item.item} (Qty: ${item.quantity}) - ${item.purchased ? 'o' : 'X'}
+          <button onclick="toggleCheck('${item.item}', ${item.purchased})">${item.purchased ? 'Uncheck' : 'Check'}</button>`;
+        list.appendChild(li);
+      });
+    }
+
+    async function getItems() {
+      const res = await fetch(`${API_URL}/items`);
+      const data = await res.json();
+      displayItems(data.items);
+    }
+
+    async function addItem() {
+      const item = document.getElementById('add-name').value;
+      const quantity = parseInt(document.getElementById('add-qty').value, 10);
+
+      await fetch(`${API_URL}/add`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ item, quantity, purchased: false })
+      });
+
+      getItems();
+    }
+
+    async function toggleCheck(itemName, purchased) {
+      const endpoint = purchased ? 'uncheck' : 'check';
+      await fetch(`${API_URL}/${endpoint}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(itemName)
+      });
+      getItems();
+    }
+
+    async function searchItems() {
+      const q = document.getElementById('search-text').value;
+      const res = await fetch(`${API_URL}/search?search_string=${encodeURIComponent(q)}`);
+      const data = await res.json();
+      displayItems(data.items);
+    }
+
+    async function sortItems() {
+      const res = await fetch(`${API_URL}/sort`);
+      const data = await res.json();
+      displayItems(data.items);
+    }
+
+    getItems();
+  </script>
+</body>
+</html>
