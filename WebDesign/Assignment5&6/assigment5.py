@@ -15,10 +15,9 @@ from sqlalchemy import (
     Integer
 )
 
-
 Base = declarative_base()
 db_path = os.path.abspath('items.db')
-Engine = create_engine('sqlite:///items.db')
+Engine = create_engine(f'sqlite:///{db_path}')
 Session = sessionmaker(bind=Engine)
 
 seed_items = [
@@ -32,8 +31,19 @@ seed_items = [
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     Base.metadata.create_all(Engine)
+    # Seed initial data
+    session = Session()
+    try:
+        if not session.query(Item).first():
+            for item in seed_items:
+                session.add(Item(**item))
+            session.commit()
+    except Exception as e:
+        print(f"Error seeding data: {e}")
+        session.rollback()
+    finally:
+        session.close()
     yield
-
 
 app = FastAPI(lifespan=lifespan)
 
@@ -82,11 +92,9 @@ def add_item(item: ItemSchema):
         item = Item(**item)
         session.add(item)
         session.commit()
-
-        return {"message": "Item Added"}, 200
+        return {"message": "Item Added", "item": serialize_item(item)}, 200
     except IntegrityError as e:
         return {"error": f"Error Adding Item: {str(e)}"}, 500
-
     finally:
         session.close()
 
@@ -96,17 +104,13 @@ def check_item(item_name: str):
     session = Session()
     try:
         item = session.query(Item).filter(Item.item == item_name).first()
-
         if item is None:
-            return 'Error Finding Item'
-
+            return {"error": "Item not found"}, 404
         item.purchased = True
         session.commit()
-
-        return {'message': "Item Checked"}, 200
+        return {"message": "Item Checked"}, 200
     except IntegrityError as e:
         return {"error": f"Error checking item: {str(e)}"}, 500
-
     finally:
         session.close()
 
@@ -116,17 +120,13 @@ def uncheck_item(item_name: str):
     session = Session()
     try:
         item = session.query(Item).filter(Item.item == item_name).first()
-
         if item is None:
-            return 'Error Finding Item'
-
+            return {"error": "Item not found"}, 404
         item.purchased = False
         session.commit()
-
-        return {'message': "Item Unchecked"}, 200
+        return {"message": "Item Unchecked"}, 200
     except IntegrityError as e:
         return {"error": f"Error checking item: {str(e)}"}, 500
-
     finally:
         session.close()
 
@@ -137,13 +137,9 @@ def search(search_string: str):
     try:
         items = session.query(Item).filter(
             Item.item.ilike(f"%{search_string}%")).all()
-
-        session.commit()
         return {'items': [serialize_item(item) for item in items]}, 200
-
     except IntegrityError as e:
         return {"error": f"Error Searching for Items {e}"}, 400
-
     finally:
         session.close()
 
@@ -153,12 +149,9 @@ def sort():
     session = Session()
     try:
         items = session.query(Item).order_by(desc(Item.quantity)).all()
-
-        session.commit()
         return {'items': [serialize_item(item) for item in items]}, 200
     except IntegrityError as e:
         return {"error": f"Error Searching for Items {e}"}, 400
-
     finally:
         session.close()
 
@@ -168,11 +161,11 @@ def items():
     session = Session()
     try:
         items = session.query(Item).all()
-
-        return {'items': items}
-
+        return {'items': [serialize_item(item) for item in items]}, 200
     except IntegrityError as e:
-        return {'error': f"Error getting items {e}"}
+        return {'error': f"Error getting items {e}"}, 500
+    finally:
+        session.close()
 
 
 if __name__ == '__main__':
